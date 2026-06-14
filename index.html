@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Майнинг SIGNA — Блокчейн Signum для русскоязычных</title>
+  <meta name="description" content="Signum — первый по-настоящему энергоэффективный блокчейн. Майни SIGNA на обычном жёстком диске. Руководство для русскоязычного сообщества." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:  #00e676;
+      --green2: #00c853;
+      --green-dim: rgba(0,230,118,0.1);
+      --green-border: rgba(0,230,118,0.2);
+      --cyan:   #00bcd4;
+      --cyan-dim: rgba(0,188,212,0.1);
+      --purple: #ce93d8;
+      --purple-dim: rgba(206,147,216,0.1);
+      --gold:   #ffd54f;
+      --gold-dim: rgba(255,213,79,0.1);
+      --red:    #ef5350;
+      --bg:     #020a05;
+      --bg2:    #04120a;
+      --bg3:    #071a0f;
+      --border: rgba(255,255,255,0.06);
+      --text:   #e0e0e0;
+      --muted:  #607d6b;
+      --muted2: #2d4a37;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,230,118,0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,230,118,0.012) 1px, transparent 1px);
+      background-size: 56px 56px;
+      pointer-events: none; z-index: 0;
+    }
+
+    .orb {
+      position: fixed; border-radius: 50%;
+      filter: blur(90px); pointer-events: none; z-index: 0;
+      animation: orbFloat 22s ease-in-out infinite;
+    }
+    @keyframes orbFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-28px)} }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; }
+
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+    section { padding: 96px 0; }
+
+    /* BADGES */
+    .badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 5px 13px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .badge-green  { background: var(--green-dim);  color: var(--green);  border: 1px solid var(--green-border); }
+    .badge-cyan   { background: var(--cyan-dim);   color: var(--cyan);   border: 1px solid rgba(0,188,212,0.2); }
+    .badge-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(206,147,216,0.2); }
+    .badge-gold   { background: var(--gold-dim);   color: var(--gold);   border: 1px solid rgba(255,213,79,0.2); }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+           box-shadow: 0 0 6px currentColor; animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px;
+    }
+    h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; line-height: 1.2; color: #fff; }
+    .subtitle { font-size: 16px; color: var(--muted); margin-top: 14px; max-width: 560px; line-height: 1.75; }
+
+    .g-green  { background: linear-gradient(135deg,#00e676,#00c853); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .g-cyan   { background: linear-gradient(135deg,#00bcd4,#0097a7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .g-purple { background: linear-gradient(135deg,#ce93d8,#9c27b0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .g-gold   { background: linear-gradient(135deg,#ffd54f,#ff8f00); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; border-radius: 12px;
+      font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg,#00e676,#00c853); color: #020a05;
+      box-shadow: 0 0 24px rgba(0,230,118,0.28);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,230,118,0.45); }
+    .btn-ghost {
+      background: rgba(255,255,255,0.04); color: var(--text); border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.14); }
+    .btn-cyan {
+      background: linear-gradient(135deg,#00bcd4,#0097a7); color: #fff;
+      box-shadow: 0 0 20px rgba(0,188,212,0.25);
+    }
+    .btn-cyan:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(0,188,212,0.42); }
+
+    /* CARDS */
+    .card {
+      background: var(--bg3); border: 1px solid var(--border); border-radius: 18px;
+      padding: 28px; transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover { border-color: rgba(255,255,255,0.11); transform: translateY(-3px); }
+    .card-green  { border-color: rgba(0,230,118,0.14); }
+    .card-green:hover  { border-color: rgba(0,230,118,0.3);  box-shadow: 0 0 50px rgba(0,230,118,0.07); }
+    .card-cyan   { border-color: rgba(0,188,212,0.14); }
+    .card-cyan:hover   { border-color: rgba(0,188,212,0.3);  box-shadow: 0 0 50px rgba(0,188,212,0.07); }
+    .card-purple { border-color: rgba(206,147,216,0.14); }
+    .card-purple:hover { border-color: rgba(206,147,216,0.3); box-shadow: 0 0 50px rgba(206,147,216,0.07); }
+    .card-gold   { border-color: rgba(255,213,79,0.14); }
+    .card-gold:hover   { border-color: rgba(255,213,79,0.3);  box-shadow: 0 0 50px rgba(255,213,79,0.07); }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      background: rgba(2,10,5,0.85);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between; height: 62px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; color: #fff; }
+    .nav-logo-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg,#00e676,#00c853);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 15px; color: #020a05;
+    }
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-links a {
+      padding: 7px 13px; border-radius: 8px; font-size: 13px; font-weight: 500;
+      color: var(--muted); transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { width: 22px; height: 2px; background: var(--muted); border-radius: 2px; }
+    @media(max-width:780px){
+      .nav-links,.nav-btn { display:none; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: absolute; top: 62px; left: 0; right: 0;
+        background: var(--bg2); border-bottom: 1px solid var(--border); padding: 14px; gap: 4px;
+      }
+    }
+
+    /* HERO */
+    #hero { padding: 80px 0 96px; }
+    .hero-inner {
+      display: grid; grid-template-columns: 1fr 420px; gap: 56px; align-items: center;
+    }
+    .hero-eyebrow { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+    .hero-title { font-size: clamp(34px,5vw,58px); font-weight: 800; line-height: 1.1; color: #fff; margin-bottom: 22px; }
+    .hero-desc { font-size: 17px; color: var(--muted); line-height: 1.75; margin-bottom: 32px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 44px; }
+    .hero-stats { display: flex; gap: 28px; flex-wrap: wrap; padding-top: 28px; border-top: 1px solid var(--border); }
+    .stat-val { font-size: 22px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #fff; }
+    .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .hero-visual { position: relative; }
+    .hv-box {
+      background: var(--bg3); border: 1px solid rgba(0,230,118,0.2);
+      border-radius: 20px; padding: 28px;
+      box-shadow: 0 0 60px rgba(0,230,118,0.06);
+    }
+    .hv-title { font-size: 13px; font-weight: 600; color: var(--green); margin-bottom: 18px; letter-spacing: 0.04em; }
+    .hv-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .hv-row:last-child { border-bottom: none; }
+    .hv-label { font-size: 13px; color: var(--muted); }
+    .hv-value { font-size: 13px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: #fff; }
+    .hv-green { color: var(--green); }
+    .hv-badge {
+      display: inline-flex; padding: 3px 8px; border-radius: 6px;
+      font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace;
+    }
+    .live-pulse {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 12px; color: var(--green); margin-top: 18px;
+    }
+    @media(max-width:900px){ .hero-inner{grid-template-columns:1fr;} .hero-visual{display:none;} }
+
+    /* WHAT IS SIGNUM */
+    #about { background: var(--bg2); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+    @media(max-width:700px){ .about-grid{grid-template-columns:1fr;} }
+    .about-card { padding: 28px; }
+    .about-icon { font-size: 32px; margin-bottom: 14px; }
+    .about-card h3 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .about-card p { font-size: 14px; color: var(--muted); line-height: 1.75; }
+    .timeline-item {
+      display: flex; gap: 16px; margin-bottom: 14px;
+    }
+    .tl-year {
+      font-family: 'JetBrains Mono',monospace; font-size: 12px; font-weight: 600;
+      color: var(--green); white-space: nowrap; padding-top: 2px; min-width: 40px;
+    }
+    .tl-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .tl-text strong { color: var(--text); }
+
+    /* MINING */
+    #mining {}
+    .poc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 48px; }
+    @media(max-width:700px){ .poc-grid{grid-template-columns:1fr;} }
+    .poc-card { padding: 26px; position: relative; overflow: hidden; }
+    .poc-num {
+      position: absolute; top: 16px; right: 20px;
+      font-size: 56px; font-weight: 800; font-family: 'JetBrains Mono',monospace;
+      opacity: 0.07; line-height: 1;
+    }
+    .poc-icon { font-size: 28px; margin-bottom: 14px; }
+    .poc-card h3 { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .poc-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    .energy-bar { margin-top: 40px; }
+    .energy-bar h3 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 20px; }
+    .ebar-row { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .ebar-label { font-size: 13px; color: var(--muted); min-width: 80px; }
+    .ebar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+    .ebar-fill { height: 100%; border-radius: 3px; }
+    .ebar-pct { font-size: 12px; font-family: 'JetBrains Mono',monospace; color: var(--muted); min-width: 60px; text-align: right; }
+
+    /* HOW TO START */
+    #start { background: var(--bg2); }
+    .steps { display: flex; flex-direction: column; gap: 0; margin-top: 48px; }
+    .step {
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 24px 0; border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-circle {
+      width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+      background: var(--green-dim); border: 1px solid var(--green-border);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 15px; color: var(--green); font-family: 'JetBrains Mono',monospace;
+    }
+    .step h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .step p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .step-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .step-link {
+      padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      border: 1px solid var(--border); color: var(--muted); transition: all 0.2s;
+    }
+    .step-link:hover { border-color: var(--green); color: var(--green); }
+
+    /* COMMITMENT */
+    #commitment {}
+    .commit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 48px; }
+    @media(max-width:700px){ .commit-grid{grid-template-columns:1fr;} }
+    .commit-big {
+      padding: 32px; grid-column: span 2; text-align: center;
+      background: linear-gradient(135deg, rgba(0,230,118,0.06) 0%, rgba(0,188,212,0.04) 100%);
+      border-color: rgba(0,230,118,0.2);
+    }
+    @media(max-width:700px){ .commit-big{grid-column:span 1;} }
+    .commit-big .big-num {
+      font-size: 72px; font-weight: 800; font-family: 'JetBrains Mono',monospace;
+      background: linear-gradient(135deg,#00e676,#00c853); -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent; background-clip:text; line-height: 1;
+      margin-bottom: 10px;
+    }
+    .commit-big p { font-size: 16px; color: var(--muted); max-width: 500px; margin: 0 auto; }
+    .mult-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .mult-row:last-child { border-bottom: none; }
+    .mult-label { font-size: 13px; color: var(--muted); }
+    .mult-val {
+      font-family: 'JetBrains Mono',monospace; font-size: 14px; font-weight: 700;
+      padding: 4px 10px; border-radius: 8px;
+    }
+    .mult-green { background: var(--green-dim); color: var(--green); }
+    .mult-low   { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+    /* HARDWARE */
+    #hardware { background: var(--bg2); }
+    .hw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 48px; }
+    .hw-card { padding: 24px; text-align: center; }
+    .hw-icon { font-size: 36px; margin-bottom: 12px; }
+    .hw-card h3 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .hw-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .hw-badge { display: inline-block; margin-top: 10px; font-size: 11px; font-weight: 700;
+                padding: 3px 9px; border-radius: 6px; background: var(--green-dim); color: var(--green); }
+
+    /* WALLETS */
+    #wallets {}
+    .wallet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-top: 48px; }
+    .wcard { padding: 24px; }
+    .wcard-name { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .wcard-type { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+    .wcard p { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 16px; }
+    .wcard-links { display: flex; flex-wrap: wrap; gap: 7px; }
+    .wcard-link {
+      padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      border: 1px solid var(--border); color: var(--muted); transition: all 0.2s;
+    }
+    .wcard-link:hover { border-color: var(--green); color: var(--green); }
+
+    /* EXCHANGES */
+    #exchanges { background: var(--bg2); }
+    .ex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 48px; }
+    .ex-card { padding: 24px; }
+    .ex-type { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
+    .ex-name { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .ex-pairs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .ex-pair {
+      font-family: 'JetBrains Mono',monospace; font-size: 11px; font-weight: 600;
+      padding: 3px 8px; border-radius: 6px;
+    }
+    .pair-green  { background: var(--green-dim);  color: var(--green); }
+    .pair-cyan   { background: var(--cyan-dim);   color: var(--cyan); }
+    .pair-purple { background: var(--purple-dim); color: var(--purple); }
+    .pair-gold   { background: var(--gold-dim);   color: var(--gold); }
+    .ex-card p { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 14px; }
+    .ex-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 13px; font-weight: 600; color: var(--green); transition: gap 0.2s;
+    }
+    .ex-link:hover { gap: 10px; }
+
+    /* ZTH SECTION */
+    #zth {}
+    .zth-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; align-items: start; }
+    @media(max-width:800px){ .zth-inner{grid-template-columns:1fr;} }
+    .zth-left {}
+    .zth-left p { font-size: 15px; color: var(--muted); line-height: 1.8; margin-bottom: 16px; }
+    .zth-earn { display: flex; flex-direction: column; gap: 12px; }
+    .zth-earn-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 16px; border-radius: 12px; background: var(--bg3); border: 1px solid var(--border);
+    }
+    .zth-earn-icon { font-size: 24px; flex-shrink: 0; }
+    .zth-earn-item h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .zth-earn-item p { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0; }
+    .zth-right { display: flex; flex-direction: column; gap: 16px; }
+    .zth-stat-card { padding: 22px; }
+    .zth-stat-card .zs-val {
+      font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono',monospace; line-height: 1.1;
+    }
+    .zth-stat-card .zs-lbl { font-size: 13px; color: var(--muted); margin-top: 6px; }
+    .zth-addr {
+      padding: 18px; border-radius: 12px; background: var(--bg3); border: 1px solid var(--border);
+    }
+    .zth-addr-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .zth-addr-val { font-family: 'JetBrains Mono',monospace; font-size: 13px; color: var(--green); word-break: break-all; margin-bottom: 10px; }
+    .copy-small {
+      padding: 6px 12px; border-radius: 7px; font-size: 11px; font-weight: 700;
+      background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .copy-small:hover { background: rgba(0,230,118,0.18); }
+
+    /* COMMUNITY */
+    #community { background: var(--bg2); }
+    .comm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 48px; }
+    .comm-card { padding: 26px; }
+    .comm-icon { font-size: 30px; margin-bottom: 14px; }
+    .comm-card h3 { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .comm-card p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+    .tg-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: 10px;
+      background: rgba(39,170,225,0.1); border: 1px solid rgba(39,170,225,0.22);
+      color: #29a8eb; font-size: 13px; font-weight: 600; transition: all 0.2s;
+    }
+    .tg-btn:hover { background: rgba(39,170,225,0.18); transform: translateY(-1px); }
+
+    /* FAQ */
+    #faq {}
+    .faq-list { display: flex; flex-direction: column; gap: 12px; margin-top: 48px; }
+    .faq-item {
+      background: var(--bg3); border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden; cursor: pointer; transition: border-color 0.2s;
+    }
+    .faq-item:hover { border-color: rgba(0,230,118,0.2); }
+    .faq-q {
+      padding: 20px 24px; display: flex; align-items: center; justify-content: space-between;
+      font-size: 15px; font-weight: 600; color: #fff; user-select: none;
+    }
+    .faq-arrow { font-size: 18px; color: var(--green); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+    }
+    .faq-item.open .faq-a { max-height: 400px; }
+    .faq-a-inner {
+      padding: 0 24px 20px; font-size: 14px; color: var(--muted); line-height: 1.75;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+    .faq-a-inner a { color: var(--green); }
+
+    /* CTA */
+    #cta { background: var(--bg2); text-align: center; }
+    .cta-inner { max-width: 680px; margin: 0 auto; }
+    .cta-inner h2 { margin-bottom: 18px; }
+    .cta-inner p { font-size: 17px; color: var(--muted); margin-bottom: 32px; line-height: 1.75; }
+    .cta-btns { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; }
+
+    /* FOOTER */
+    footer { padding: 44px 0 30px; border-top: 1px solid var(--border); }
+    .footer-top {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px; margin-bottom: 28px;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #fff; }
+    .footer-logo-icon {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: linear-gradient(135deg,#00e676,#00c853);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 13px; color: #020a05;
+    }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 6px; }
+    .footer-links a {
+      padding: 5px 11px; border-radius: 7px; font-size: 13px; color: var(--muted);
+      border: 1px solid var(--border); transition: all 0.2s;
+    }
+    .footer-links a:hover { color: #fff; border-color: rgba(255,255,255,0.14); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+      padding-top: 20px; border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--muted2);
+    }
+    .footer-bottom a { color: var(--green); }
+
+    /* ANIMATION */
+    .fade-up { opacity: 0; transform: translateY(22px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+
+    /* CODE */
+    code {
+      font-family: 'JetBrains Mono',monospace; font-size: 12px;
+      background: rgba(0,230,118,0.08); color: var(--green);
+      padding: 2px 6px; border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Orbs -->
+<div class="orb" style="width:700px;height:700px;top:-15%;left:-10%;background:radial-gradient(circle,rgba(0,230,118,0.07) 0%,transparent 70%)"></div>
+<div class="orb" style="width:500px;height:500px;bottom:15%;right:-8%;background:radial-gradient(circle,rgba(0,188,212,0.06) 0%,transparent 70%);animation-delay:9s"></div>
+<div class="orb" style="width:400px;height:400px;bottom:-5%;left:25%;background:radial-gradient(circle,rgba(206,147,216,0.04) 0%,transparent 70%);animation-delay:16s"></div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">S</div>
+      Signum RU
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#about">О блокчейне</a>
+      <a href="#mining">Майнинг</a>
+      <a href="#start">Начать</a>
+      <a href="#wallets">Кошельки</a>
+      <a href="#exchanges">Биржи</a>
+      <a href="#zth">ZTH</a>
+      <a href="#community">Сообщество</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#start" class="btn btn-primary" style="padding:9px 18px;font-size:13px;">Начать майнинг</a>
+    <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">
+          <span class="badge badge-green"><span class="dot"></span> Блокчейн 4-го поколения</span>
+          <span class="badge badge-cyan">⚡ PoC+ Майнинг</span>
+          <span class="badge" style="background:rgba(255,213,79,0.1);color:#ffd54f;border:1px solid rgba(255,213,79,0.2);">🇷🇺 Русскоязычный гид</span>
+        </div>
+        <h1 class="hero-title">
+          Майнинг криптовалюты<br />
+          на <span class="g-green">жёстком диске</span> —<br />
+          честно и экологично
+        </h1>
+        <p class="hero-desc">
+          Signum — блокчейн, где добыча монет SIGNA не требует видеокарт и ASIC.
+          Только место на диске и немного электричества. Потребление энергии в <strong style="color:#fff;">50 000 раз</strong> меньше, чем у Биткойна.
+        </p>
+        <div class="hero-actions">
+          <a href="#start" class="btn btn-primary">Начать майнить SIGNA</a>
+          <a href="#mining" class="btn btn-ghost">Как это работает</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="stat-val g-green">&lt; 0.002%</div>
+            <div class="stat-lbl">от энергии Биткойна</div>
+          </div>
+          <div>
+            <div class="stat-val g-cyan">×8</div>
+            <div class="stat-lbl">бонус за Commitment</div>
+          </div>
+          <div>
+            <div class="stat-val" style="color:#fff;">2014</div>
+            <div class="stat-lbl">год основания</div>
+          </div>
+          <div>
+            <div class="stat-val g-green">∞</div>
+            <div class="stat-lbl">без ASIC и GPU</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hv-box">
+          <div class="hv-title">⛏ СТАТУС МАЙНИНГА</div>
+          <div class="hv-row">
+            <span class="hv-label">Сеть</span>
+            <span class="hv-value hv-green">Signum Mainnet</span>
+          </div>
+          <div class="hv-row">
+            <span class="hv-label">Консенсус</span>
+            <span class="hv-value">PoC+</span>
+          </div>
+          <div class="hv-row">
+            <span class="hv-label">Оборудование</span>
+            <div>
+              <span class="hv-badge" style="background:var(--green-dim);color:var(--green);">HDD</span>
+              <span class="hv-badge" style="background:var(--cyan-dim);color:var(--cyan);margin-left:4px;">SSD</span>
+            </div>
+          </div>
+          <div class="hv-row">
+            <span class="hv-label">GPU / ASIC</span>
+            <span class="hv-value" style="color:var(--red);">НЕ нужны</span>
+          </div>
+          <div class="hv-row">
+            <span class="hv-label">Min. диск</span>
+            <span class="hv-value">1 ГБ</span>
+          </div>
+          <div class="hv-row">
+            <span class="hv-label">Commitment</span>
+            <span class="hv-value hv-green">бонус до ×8</span>
+          </div>
+          <div class="hv-row">
+            <span class="hv-label">Смарт-контракты</span>
+            <span class="hv-value">Да (AT)</span>
+          </div>
+          <div class="hv-row">
+            <span class="hv-label">История</span>
+            <span class="hv-value">с 2014 (BurstCoin)</span>
+          </div>
+          <div class="live-pulse">
+            <span class="dot"></span> Сеть работает с 2021 (Signum)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">О блокчейне</p>
+      <h2>Что такое <span class="g-green">Signum</span></h2>
+      <p class="subtitle">Первый в мире по-настоящему устойчивый блокчейн с почти нулевым потреблением энергии и полноценными смарт-контрактами.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="card card-green fade-up">
+        <div class="about-icon">🕰</div>
+        <h3>История</h3>
+        <div class="timeline-item"><span class="tl-year">2014</span><div class="tl-text">Запуск <strong>BurstCoin</strong> — первый в мире блокчейн на Proof of Capacity (HDD)</div></div>
+        <div class="timeline-item"><span class="tl-year">2019</span><div class="tl-text">Первый в мире <strong>смарт-контракт</strong> на блокчейне с PoC</div></div>
+        <div class="timeline-item"><span class="tl-year">2021</span><div class="tl-text">Ребрендинг в <strong>Signum</strong> + хардфорк, переход на PoC+ (Proof of Commitment)</div></div>
+        <div class="timeline-item"><span class="tl-year">2022+</span><div class="tl-text">Активное развитие DeFi, NFT, DEX, токенов и смарт-контрактов</div></div>
+      </div>
+
+      <div class="card card-cyan fade-up">
+        <div class="about-icon">⚡</div>
+        <h3>Почему Signum уникален</h3>
+        <p>Это не просто «другая криптовалюта». Signum — это экосистема с реальными технологиями, которой уже <strong style="color:#fff;">10+ лет</strong>:</p>
+        <ul style="list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:10px;">
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--cyan)">→</span> Майнинг на любом HDD/SSD без GPU и ASIC</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--cyan)">→</span> Полные смарт-контракты (Turing-complete АТ)</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--cyan)">→</span> Токены, NFT, DEX — всё в одной цепи</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--cyan)">→</span> Псевдонимы вместо длинных адресов</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--cyan)">→</span> Сообщения прямо в транзакциях</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--cyan)">→</span> Комиссия от <code>0.00735 SIGNA</code> за транзакцию</li>
+        </ul>
+      </div>
+
+      <div class="card card-purple fade-up">
+        <div class="about-icon">🪙</div>
+        <h3>Криптовалюта SIGNA</h3>
+        <p>SIGNA — нативная монета блокчейна Signum. Используется для:</p>
+        <ul style="list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:9px;">
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--purple)">→</span> Оплаты транзакций и смарт-контрактов</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--purple)">→</span> Commitment (залог для усиления майнинга)</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--purple)">→</span> Создания токенов (<code>150 SIGNA</code>)</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--purple)">→</span> P2P платежей без посредников</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--purple)">→</span> Участия в пулах ликвидности DeFi</li>
+        </ul>
+      </div>
+
+      <div class="card card-gold fade-up">
+        <div class="about-icon">🏭</div>
+        <h3>Смарт-контракты</h3>
+        <p>Signum был <strong style="color:#fff;">первым PoC-блокчейном</strong> со смарт-контрактами ещё в 2019 году. Контракты работают как «автоматизированные транзакции» (AT):</p>
+        <ul style="list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:9px;">
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--gold)">→</span> Turing-complete (любая логика)</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--gold)">→</span> Стоимость операции: <code>0.001 SIGNA</code></li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--gold)">→</span> Код на Java и C</li>
+          <li style="display:flex;gap:8px;font-size:14px;color:var(--muted)"><span style="color:var(--gold)">→</span> Запускаются автономно без сервера</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MINING ══ -->
+<section id="mining">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">Как работает майнинг</p>
+      <h2>Proof of Capacity+ — <span class="g-green">майнинг на диске</span></h2>
+      <p class="subtitle">Никаких видеокарт и ASIC-чипов. Используется свободное место на жёстком диске — энергии почти не нужно.</p>
+    </div>
+
+    <div class="poc-grid">
+      <div class="card card-green poc-card fade-up">
+        <div class="poc-num" style="color:var(--green)">01</div>
+        <div class="poc-icon">📁</div>
+        <h3>Шаг 1 — Плотинг</h3>
+        <p>Один раз заполняешь диск специальными файлами — «графиками» (plot files). Создание занимает время, зависит от объёма диска. После создания — они постоянные, не меняются.</p>
+      </div>
+      <div class="card card-cyan poc-card fade-up">
+        <div class="poc-num" style="color:var(--cyan)">02</div>
+        <div class="poc-icon">🔍</div>
+        <h3>Шаг 2 — Сканирование</h3>
+        <p>При каждом новом блоке майнер читает только <strong style="color:#fff;">~0.025%</strong> от графиков. Это очень быстро. Диск не изнашивается сильнее обычного чтения файлов.</p>
+      </div>
+      <div class="card card-purple poc-card fade-up">
+        <div class="poc-num" style="color:var(--purple)">03</div>
+        <div class="poc-icon">🎯</div>
+        <h3>Шаг 3 — Дедлайн</h3>
+        <p>Майнер находит минимальный «дедлайн» — время до следующего блока. Кто нашёл меньший дедлайн — добывает блок и получает вознаграждение.</p>
+      </div>
+      <div class="card card-gold poc-card fade-up">
+        <div class="poc-num" style="color:var(--gold)">04</div>
+        <div class="poc-icon">🔒</div>
+        <h3>Шаг 4 — Commitment</h3>
+        <p>Дополнительно можно «заблокировать» SIGNA в качестве залога. Чем больше залог относительно объёма диска — тем <strong style="color:#fff;">лучше дедлайны</strong>. Максимум: <strong style="color:var(--gold)">×8</strong> к мощности.</p>
+      </div>
+    </div>
+
+    <div class="card energy-bar fade-up" style="margin-top:24px;">
+      <h3>Сравнение энергопотребления</h3>
+      <div class="ebar-row">
+        <span class="ebar-label">Bitcoin</span>
+        <div class="ebar-track"><div class="ebar-fill" style="width:100%;background:#f44336;"></div></div>
+        <span class="ebar-pct" style="color:#f44336;">100%</span>
+      </div>
+      <div class="ebar-row">
+        <span class="ebar-label">Ethereum</span>
+        <div class="ebar-track"><div class="ebar-fill" style="width:45%;background:#f59e0b;"></div></div>
+        <span class="ebar-pct" style="color:#f59e0b;">~45%</span>
+      </div>
+      <div class="ebar-row">
+        <span class="ebar-label">Signum</span>
+        <div class="ebar-track"><div class="ebar-fill" style="width:2px;background:var(--green);box-shadow:0 0 8px var(--green);"></div></div>
+        <span class="ebar-pct" style="color:var(--green);">&lt; 0.002%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HOW TO START ══ -->
+<section id="start">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">Как начать</p>
+      <h2>От нуля до <span class="g-green">первого блока</span></h2>
+      <p class="subtitle">Пошаговое руководство для новичков. Займёт пару часов — и диск начнёт работать на тебя.</p>
+    </div>
+
+    <div class="steps fade-up">
+      <div class="step">
+        <div class="step-circle">1</div>
+        <div>
+          <h3>Установи кошелёк</h3>
+          <p>Скачай XT Wallet (расширение для браузера) или Phoenix Wallet (десктоп/мобильный). Создай аккаунт — ты получишь адрес вида <code>S-XXXX-XXXX-XXXX-XXXXX</code> и сид-фразу. Сид-фразу запиши и храни надёжно — это единственный способ восстановить кошелёк.</p>
+          <div class="step-links">
+            <a href="https://chrome.google.com/webstore/detail/signum-xt-wallet/mdnleldcmiljblolnjhpnblkcekpdkpa" target="_blank" class="step-link">XT Wallet для Chrome</a>
+            <a href="https://addons.mozilla.org/en-US/firefox/addon/signum-xt-wallet/" target="_blank" class="step-link">XT Wallet для Firefox</a>
+            <a href="https://github.com/signum-network/phoenix/releases" target="_blank" class="step-link">Phoenix Wallet</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-circle">2</div>
+        <div>
+          <h3>Купи немного SIGNA</h3>
+          <p>Нужно активировать аккаунт: сделать хотя бы одну исходящую транзакцию. Для этого нужно немного SIGNA. Купи на BTDEX или Xeggex. Достаточно 100–200 SIGNA для начала. После первой исходящей транзакции аккаунт активируется и публичный ключ появится на блокчейне.</p>
+          <div class="step-links">
+            <a href="https://btdex.trade" target="_blank" class="step-link">BTDEX</a>
+            <a href="https://xeggex.com" target="_blank" class="step-link">Xeggex</a>
+            <a href="https://signumswap.com" target="_blank" class="step-link">SignumSwap</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-circle">3</div>
+        <div>
+          <h3>Установи майнинговый клиент</h3>
+          <p>Скачай <strong style="color:#fff;">Signum-Miner</strong> (официальный клиент с открытым кодом) или <strong style="color:#fff;">Scavenger</strong> (высокопроизводительный вариант). Настрой файл конфигурации: укажи адрес своего кошелька, адрес пула и папку с будущими графиками.</p>
+          <div class="step-links">
+            <a href="https://github.com/signum-network/signum-miner/releases" target="_blank" class="step-link">Signum-Miner</a>
+            <a href="https://github.com/signum-network/scavenger/releases" target="_blank" class="step-link">Scavenger</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-circle">4</div>
+        <div>
+          <h3>Создай графики (плотинг)</h3>
+          <p>Запусти программу плотинга — она заполнит выбранный диск файлами. Скорость: примерно <strong style="color:#fff;">30–60 ГБ/час</strong> на обычном HDD. На 1 ТБ уйдёт 16–30 часов. Запускай плотинг ночью или пока не нужен диск. Файлы создаются один раз — потом только читаются.</p>
+          <div class="step-links">
+            <a href="https://github.com/signum-network/signum-miner" target="_blank" class="step-link">Инструкция к плотингу</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-circle">5</div>
+        <div>
+          <h3>Подключись к пулу</h3>
+          <p>Соло-майнинг на маленьких объёмах приносит нестабильный доход. Лучше подключиться к пулу — тогда выплаты идут регулярно пропорционально твоему объёму диска. Популярные пулы: Signum-Network Pool, V2 Pool, TurboPool.</p>
+          <div class="step-links">
+            <a href="https://signum-network.org" target="_blank" class="step-link">Signum-Network Pool</a>
+            <a href="https://signumpool.de" target="_blank" class="step-link">SignumPool</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-circle">6</div>
+        <div>
+          <h3>Добавь Commitment (необязательно, но выгодно)</h3>
+          <p>Заблокируй SIGNA через кошелёк как «залог» — это увеличит твою эффективную мощность без покупки новых дисков. <strong style="color:#fff;">Залог не тратится и не теряется</strong> — его можно вернуть в любое время. Оптимальное соотношение: 1 SIGNA на каждые 50 МБ диска для получения максимального ×8 бонуса.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMMITMENT ══ -->
+<section id="commitment" style="background:var(--bg2);">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">Proof of Commitment</p>
+      <h2>Залог SIGNA = <span class="g-green">больше мощности</span></h2>
+      <p class="subtitle">Уникальная функция Signum: заблокируй монеты — получи бонус к эффективности майнинга. Без покупки нового железа.</p>
+    </div>
+
+    <div class="commit-grid">
+      <div class="card commit-big card-green fade-up">
+        <div class="big-num">×8</div>
+        <p>Максимальный бонус к мощности майнинга при оптимальном соотношении залога к объёму диска</p>
+      </div>
+
+      <div class="card card-green fade-up" style="padding:24px 28px;">
+        <h3 style="font-size:15px;font-weight:700;color:#fff;margin-bottom:16px;">Как считается бонус</h3>
+        <div class="mult-row">
+          <span class="mult-label">Залога нет</span>
+          <span class="mult-val mult-low">×1.0</span>
+        </div>
+        <div class="mult-row">
+          <span class="mult-label">25% от оптимума</span>
+          <span class="mult-val mult-low">×2.0</span>
+        </div>
+        <div class="mult-row">
+          <span class="mult-label">50% от оптимума</span>
+          <span class="mult-val mult-low">×3.4</span>
+        </div>
+        <div class="mult-row">
+          <span class="mult-label">75% от оптимума</span>
+          <span class="mult-val mult-low">×5.3</span>
+        </div>
+        <div class="mult-row">
+          <span class="mult-label">100% — оптимум</span>
+          <span class="mult-val mult-green">×8.0</span>
+        </div>
+      </div>
+
+      <div class="card card-cyan fade-up" style="padding:24px 28px;">
+        <h3 style="font-size:15px;font-weight:700;color:#fff;margin-bottom:14px;">Важно знать</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;gap:10px;font-size:14px;color:var(--muted);">
+            <span style="color:var(--green);font-size:16px;">✓</span>
+            Залог <strong style="color:#fff;">не тратится</strong> — монеты просто заморожены
+          </div>
+          <div style="display:flex;gap:10px;font-size:14px;color:var(--muted);">
+            <span style="color:var(--green);font-size:16px;">✓</span>
+            Разморозить можно в <strong style="color:#fff;">любой момент</strong>
+          </div>
+          <div style="display:flex;gap:10px;font-size:14px;color:var(--muted);">
+            <span style="color:var(--green);font-size:16px;">✓</span>
+            Залог делается прямо из кошелька (XT или Phoenix)
+          </div>
+          <div style="display:flex;gap:10px;font-size:14px;color:var(--muted);">
+            <span style="color:var(--green);font-size:16px;">✓</span>
+            Увеличивает шансы найти блок без новых дисков
+          </div>
+          <div style="display:flex;gap:10px;font-size:14px;color:var(--muted);">
+            <span style="color:var(--gold);font-size:16px;">→</span>
+            Оптимум ≈ <code>1 SIGNA на 50 МБ</code> диска
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HARDWARE ══ -->
+<section id="hardware">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">Оборудование</p>
+      <h2>Майнит <span class="g-green">всё, что хранит данные</span></h2>
+      <p class="subtitle">Не нужно покупать специальное оборудование. Если у тебя есть свободное место на диске — ты уже майнер.</p>
+    </div>
+
+    <div class="hw-grid">
+      <div class="card card-green hw-card fade-up">
+        <div class="hw-icon">💽</div>
+        <h3>HDD</h3>
+        <p>Обычный жёсткий диск — лучший выбор для майнинга. Дешёвый, объёмный, долговечен при майнинге (чтение — не запись).</p>
+        <span class="hw-badge">Лучший выбор</span>
+      </div>
+      <div class="card card-cyan hw-card fade-up">
+        <div class="hw-icon">⚡</div>
+        <h3>SSD / NVMe</h3>
+        <p>Работает быстрее для сканирования, но дороже за гигабайт. Идеален если уже есть свободный SSD.</p>
+        <span class="hw-badge" style="background:var(--cyan-dim);color:var(--cyan);">Хороший выбор</span>
+      </div>
+      <div class="card hw-card fade-up">
+        <div class="hw-icon">🖥</div>
+        <h3>Обычный ПК</h3>
+        <p>Майнинг работает в фоновом режиме. Ресурсы CPU и RAM почти не используются — только дисковое чтение.</p>
+        <span class="hw-badge" style="background:var(--purple-dim);color:var(--purple);">Удобно</span>
+      </div>
+      <div class="card hw-card fade-up">
+        <div class="hw-icon">🍓</div>
+        <h3>Raspberry Pi</h3>
+        <p>Подключи внешний HDD и запусти майнер. Потребляет 5–10 Вт. Идеально для круглосуточного тихого майнинга.</p>
+        <span class="hw-badge" style="background:var(--gold-dim);color:var(--gold);">Экономично</span>
+      </div>
+      <div class="card hw-card fade-up">
+        <div class="hw-icon">🖧</div>
+        <h3>NAS / сервер</h3>
+        <p>Сетевое хранилище с несколькими дисками. Можно добавлять диски постепенно и масштабировать ферму.</p>
+        <span class="hw-badge" style="background:var(--purple-dim);color:var(--purple);">Масштабируемо</span>
+      </div>
+      <div class="card hw-card fade-up">
+        <div class="hw-icon">☁️</div>
+        <h3>VPS / облако</h3>
+        <p>Арендуй дисковое пространство у провайдера. Нет затрат на электричество и оборудование — только аренда.</p>
+        <span class="hw-badge" style="background:rgba(255,255,255,0.06);color:var(--muted);">Вариант</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WALLETS ══ -->
+<section id="wallets" style="background:var(--bg2);">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">Кошельки</p>
+      <h2>Выбери <span class="g-cyan">удобный кошелёк</span></h2>
+      <p class="subtitle">Все кошельки бесплатны и не хранят ключи на стороннем сервере. Полный контроль над монетами.</p>
+    </div>
+
+    <div class="wallet-grid">
+      <div class="card card-green wcard fade-up">
+        <div class="wcard-name">XT Wallet</div>
+        <div class="wcard-type">Браузерное расширение · Chrome · Firefox · Yandex</div>
+        <p>Самый удобный для ежедневного использования. Устанавливается как расширение, работает прямо в браузере. Поддерживает несколько аккаунтов, dApps, токены и смарт-контракты. Рекомендуется для новичков.</p>
+        <div class="wcard-links">
+          <a href="https://chrome.google.com/webstore/detail/signum-xt-wallet/mdnleldcmiljblolnjhpnblkcekpdkpa" target="_blank" class="wcard-link">Chrome</a>
+          <a href="https://addons.mozilla.org/en-US/firefox/addon/signum-xt-wallet/" target="_blank" class="wcard-link">Firefox</a>
+          <a href="https://github.com/signum-network/signum-xt-wallet" target="_blank" class="wcard-link">GitHub</a>
+        </div>
+      </div>
+
+      <div class="card card-cyan wcard fade-up">
+        <div class="wcard-name">Phoenix Wallet</div>
+        <div class="wcard-type">iOS · Android · Windows · Linux · macOS</div>
+        <p>Многоплатформенный кошелёк: работает на телефоне и десктопе. Удобный мобильный интерфейс, QR-коды, DEX прямо внутри приложения. Хороший выбор для мобильного использования.</p>
+        <div class="wcard-links">
+          <a href="https://apps.apple.com/app/phoenix-signum-wallet/id1579520337" target="_blank" class="wcard-link">App Store</a>
+          <a href="https://play.google.com/store/apps/details?id=com.burstcoin.phoenix" target="_blank" class="wcard-link">Google Play</a>
+          <a href="https://github.com/signum-network/phoenix/releases" target="_blank" class="wcard-link">Desktop</a>
+        </div>
+      </div>
+
+      <div class="card card-purple wcard fade-up">
+        <div class="wcard-name">Signum Mobile v2</div>
+        <div class="wcard-type">iOS · Android · Новый (2024)</div>
+        <p>Кошелёк второго поколения с поддержкой SRC-22 deeplink. Позволяет подтверждать транзакции из браузера одним кликом. Идеален для работы с dApps и покупки токенов с телефона.</p>
+        <div class="wcard-links">
+          <a href="https://apps.apple.com/us/app/signum-mobile-wallet-v2/id6761561116" target="_blank" class="wcard-link">App Store</a>
+          <a href="https://play.google.com/store/apps/details?id=com.signum.mobile.wallet" target="_blank" class="wcard-link">Google Play</a>
+        </div>
+      </div>
+
+      <div class="card card-gold wcard fade-up">
+        <div class="wcard-name">BTDEX</div>
+        <div class="wcard-type">Desktop · Встроенные кошелёк + майнер + DEX</div>
+        <p>«Всё в одном» приложение: кошелёк, встроенный майнер, децентрализованная биржа. Без KYC, полный контроль ключей. Хороший выбор если хочешь сразу майнить и торговать.</p>
+        <div class="wcard-links">
+          <a href="https://btdex.trade" target="_blank" class="wcard-link">Скачать</a>
+          <a href="https://github.com/btdex/btdex" target="_blank" class="wcard-link">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EXCHANGES ══ -->
+<section id="exchanges">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">Биржи</p>
+      <h2>Где купить и продать <span class="g-green">SIGNA</span></h2>
+      <p class="subtitle">SIGNA доступна как на децентрализованных, так и на централизованных биржах.</p>
+    </div>
+
+    <div class="ex-grid">
+      <div class="card card-green ex-card fade-up">
+        <div class="ex-type">DEX · На блокчейне Signum</div>
+        <div class="ex-name">BTDEX</div>
+        <div class="ex-pairs">
+          <span class="ex-pair pair-green">SIGNA/BTC</span>
+          <span class="ex-pair pair-cyan">SIGNA/ETH</span>
+          <span class="ex-pair pair-purple">SIGNA/USDT</span>
+        </div>
+        <p>Главная DEX экосистемы. Без регистрации и KYC. Торгуется прямо из Phoenix или BTDEX-кошелька.</p>
+        <a href="https://btdex.trade" target="_blank" class="ex-link">Перейти →</a>
+      </div>
+
+      <div class="card card-cyan ex-card fade-up">
+        <div class="ex-type">AMM DEX · Пулы ликвидности</div>
+        <div class="ex-name">SignumSwap</div>
+        <div class="ex-pairs">
+          <span class="ex-pair pair-green">SIGNA/ZTH</span>
+          <span class="ex-pair pair-cyan">SIGNA/VGB</span>
+          <span class="ex-pair pair-purple">SIGNA/токены</span>
+        </div>
+        <p>AMM-свап внутри блокчейна Signum. Пулы ликвидности, пассивный доход от комиссий. Мгновенные обмены.</p>
+        <a href="https://signumswap.com" target="_blank" class="ex-link">Перейти →</a>
+      </div>
+
+      <div class="card ex-card fade-up">
+        <div class="ex-type">CEX · Централизованная</div>
+        <div class="ex-name">Xeggex</div>
+        <div class="ex-pairs">
+          <span class="ex-pair pair-green">SIGNA/USDT</span>
+          <span class="ex-pair pair-cyan">SIGNA/BTC</span>
+        </div>
+        <p>Популярная биржа с хорошей ликвидностью SIGNA. Требует регистрацию. Удобна для входа через рубли.</p>
+        <a href="https://xeggex.com" target="_blank" class="ex-link">Перейти →</a>
+      </div>
+
+      <div class="card ex-card fade-up">
+        <div class="ex-type">CEX · Централизованная</div>
+        <div class="ex-name">Indodax</div>
+        <div class="ex-pairs">
+          <span class="ex-pair pair-green">SIGNA/IDR</span>
+        </div>
+        <p>Крупнейшая индонезийская биржа. Высокая ликвидность для SIGNA среди азиатской аудитории.</p>
+        <a href="https://indodax.com" target="_blank" class="ex-link">Перейти →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ZTH ══ -->
+<section id="zth">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">Дополнительный доход</p>
+      <h2>ZTH — виртуальный майнинг <span class="g-purple">поверх Signum</span></h2>
+      <p class="subtitle">Если ты уже в экосистеме Signum — есть способ зарабатывать ещё больше без нового оборудования.</p>
+    </div>
+
+    <div class="zth-inner">
+      <div class="zth-left fade-up">
+        <p>
+          <strong style="color:#fff;">ZTH (Zethereum)</strong> — токен на блокчейне Signum с системой виртуального майнинга.
+          Вместо физических дисков — токен <strong style="color:#fff;">VGB</strong> (виртуальный жёсткий диск).
+        </p>
+        <p>
+          Купи VGB за SIGNA и умный контракт начнёт автоматически распределять ZTH каждые 12 часов —
+          пропорционально твоей доле VGB. Никакого оборудования, никакого шума.
+        </p>
+        <p>Чем больше ZTH накопишь — тем больше пассивный доход:</p>
+
+        <div class="zth-earn">
+          <div class="zth-earn-item">
+            <span class="zth-earn-icon">⛏</span>
+            <div>
+              <h4>Майнинг ZTH через VGB</h4>
+              <p>1 VGB = 250 SIGNA. Купи и получай ZTH каждые 12 часов автоматически. 1 000 ZTH раздаётся каждые 12 часов всем держателям VGB.</p>
+            </div>
+          </div>
+          <div class="zth-earn-item">
+            <span class="zth-earn-icon">💎</span>
+            <div>
+              <h4>Дивиденды в SIGNA (от 1 000 ZTH)</h4>
+              <p>Держи 1 000+ ZTH — и получай регулярные выплаты в SIGNA. Смарт-контракт распределяет доход от продажи VGB между всеми холдерами.</p>
+            </div>
+          </div>
+          <div class="zth-earn-item">
+            <span class="zth-earn-icon">🏆</span>
+            <div>
+              <h4>Стейкинг ZTH (от 20 000 ZTH)</h4>
+              <p>Держи 20 000+ ZTH — войди в приватный стейкинг и получай дополнительные 1 000 ZTH каждые 12 часов. Чем больше доля — тем больше вознаграждение.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="https://zth-web-2.vercel.app" target="_blank" class="btn btn-cyan">Открыть ZTH Tracker ⚡</a>
+          <a href="https://zethereum.vercel.app" target="_blank" class="btn btn-ghost">Сайт проекта</a>
+        </div>
+      </div>
+
+      <div class="zth-right fade-up">
+        <div class="card card-purple zth-stat-card">
+          <div class="zs-val g-purple">100 000 000</div>
+          <div class="zs-lbl">Максимальная эмиссия ZTH</div>
+        </div>
+        <div class="card zth-stat-card" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div>
+            <div class="zs-val" style="font-size:22px;color:#fff;">2 000</div>
+            <div class="zs-lbl">ZTH каждые 12 часов</div>
+          </div>
+          <div>
+            <div class="zs-val" style="font-size:22px;" ><span class="g-gold">61 год</span></div>
+            <div class="zs-lbl">до полной добычи</div>
+          </div>
+        </div>
+
+        <div class="zth-addr">
+          <div class="zth-addr-label">Контракт продажи VGB (250 SIGNA → 1 VGB)</div>
+          <div class="zth-addr-val" id="vgbAddr">S-X3F9-KL43-GPMV-2YTHN</div>
+          <button class="copy-small" onclick="copyAddr('vgbAddr',this)">Копировать</button>
+        </div>
+
+        <div class="card" style="padding:20px;">
+          <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:12px;">Биржи ZTH</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;">
+              <span style="color:var(--muted);">BTDEX</span>
+              <span class="ex-pair pair-purple" style="font-size:11px;">ZTH/SIGNA</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;">
+              <span style="color:var(--muted);">SignumSwap</span>
+              <div style="display:flex;gap:4px;">
+                <span class="ex-pair pair-purple" style="font-size:11px;">ZTH/SIGNA</span>
+                <span class="ex-pair pair-cyan" style="font-size:11px;">ZTH/VGB</span>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;">
+              <span style="color:var(--muted);">DeDust (TON)</span>
+              <span class="ex-pair pair-gold" style="font-size:11px;">ZTH/TON</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMMUNITY ══ -->
+<section id="community">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">Сообщество</p>
+      <h2>Мы в <span class="g-green">Telegram и не только</span></h2>
+    </div>
+
+    <div class="comm-grid">
+      <div class="card card-green comm-card fade-up">
+        <div class="comm-icon">🇷🇺</div>
+        <h3>Signum Russian</h3>
+        <p>Главный русскоязычный чат по Signum. Вопросы по майнингу, кошелькам, техническим темам. Активное сообщество, быстрые ответы.</p>
+        <a href="https://t.me/signum_russian" target="_blank" class="tg-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L8.48 14.226l-2.95-.924c-.642-.202-.655-.642.136-.953l11.527-4.444c.536-.194 1.006.131.37.343z"/></svg>
+          @signum_russian
+        </a>
+      </div>
+
+      <div class="card card-cyan comm-card fade-up">
+        <div class="comm-icon">💬</div>
+        <h3>ZTH DAO</h3>
+        <p>Сообщество проекта ZTH. Новости о токене, смарт-контрактах, обновлениях системы виртуального майнинга. Обсуждения и анонсы.</p>
+        <a href="https://t.me/ZTH_DAO" target="_blank" class="tg-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L8.48 14.226l-2.95-.924c-.642-.202-.655-.642.136-.953l11.527-4.444c.536-.194 1.006.131.37.343z"/></svg>
+          @ZTH_DAO
+        </a>
+      </div>
+
+      <div class="card card-purple comm-card fade-up">
+        <div class="comm-icon">🤖</div>
+        <h3>ZTH Donat Bot</h3>
+        <p>Telegram-бот для работы с ZTH прямо в мессенджере. Храни токены, отправляй другим пользователям, используй мост между Signum и TON.</p>
+        <a href="https://t.me/ZTHDonatBot" target="_blank" class="tg-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L8.48 14.226l-2.95-.924c-.642-.202-.655-.642.136-.953l11.527-4.444c.536-.194 1.006.131.37.343z"/></svg>
+          @ZTHDonatBot
+        </a>
+      </div>
+
+      <div class="card card-gold comm-card fade-up">
+        <div class="comm-icon">🌍</div>
+        <h3>Signum English</h3>
+        <p>Международное сообщество Signum. Новости, обновления, разработка. Команда проекта отвечает здесь на вопросы от разработчиков.</p>
+        <a href="https://t.me/signum_network" target="_blank" class="tg-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L8.48 14.226l-2.95-.924c-.642-.202-.655-.642.136-.953l11.527-4.444c.536-.194 1.006.131.37.343z"/></svg>
+          @signum_network
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section id="faq" style="background:var(--bg2);">
+  <div class="container">
+    <div class="fade-up">
+      <p class="section-label">Часто задаваемые вопросы</p>
+      <h2>Ответы на <span class="g-green">популярные вопросы</span></h2>
+    </div>
+
+    <div class="faq-list fade-up">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Нужна ли мне мощная видеокарта для майнинга SIGNA? <span class="faq-arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Нет. Майнинг Signum работает на обычных жёстких дисках (HDD или SSD). Видеокарта и ASIC-чипы вообще не нужны. CPU используется минимально — только для сканирования файлов. Даже слабый компьютер типа Raspberry Pi справляется.</div></div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Сколько нужно места на диске чтобы начать? <span class="faq-arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Технически — от 1 ГБ. Но чем больше места, тем выше вероятность добыть блок и получить вознаграждение. Рекомендуется начинать хотя бы с 1 ТБ для получения регулярных выплат через пул. Можно использовать любой диск — внешний, внутренний, NAS.</div></div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Как долго создаются файлы плотинга? <span class="faq-arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Примерно 30–60 ГБ в час на обычном HDD. На 1 ТБ уйдёт около 16–30 часов. На SSD быстрее — 100–200 ГБ/ч. Плотинг делается один раз — потом файлы только читаются и не нужно их пересоздавать.</div></div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Что такое Commitment и зачем он нужен? <span class="faq-arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Commitment — это залог SIGNA в кошельке, который увеличивает твою «виртуальную» мощность майнинга. Если заморозить оптимальное количество SIGNA, эффективность вырастет до 8 раз. Монеты не тратятся и возвращаются в любой момент. Это уникальная функция Signum, позволяющая конкурировать без покупки большего количества дисков.</div></div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Лучше майнить в пуле или соло? <span class="faq-arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Для большинства пользователей пул лучше: стабильные регулярные выплаты пропорционально твоему объёму. Соло-майнинг подходит тем, у кого очень большой объём дисков (10+ ТБ) — тогда блоки находятся достаточно часто. Новичкам рекомендуем пул.</div></div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Убьёт ли майнинг мой жёсткий диск? <span class="faq-arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Нет. Майнер только читает файлы графиков — записи почти нет. При каждом блоке читается лишь ~0.025% данных. Это несравнимо меньше нагрузки, чем обычное использование диска для хранения файлов или видеозаписи. SSD-диски также безопасны.</div></div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Что такое ZTH и как это связано с Signum? <span class="faq-arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">ZTH (Zethereum) — это токен, созданный на блокчейне Signum. Система имитирует майнинг через смарт-контракты: покупаешь токен VGB (виртуальный диск) за SIGNA — и умный контракт автоматически распределяет ZTH каждые 12 часов. Это дополнительный доход поверх обычного майнинга SIGNA. <a href="https://zethereum.vercel.app" target="_blank">Подробнее →</a></div></div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Можно ли майнить с телефона? <span class="faq-arrow">▾</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Технически — да, но это непрактично: место на телефоне дорогое, а скорость сканирования низкая. Лучше использовать телефон как кошелёк (Phoenix или Signum Mobile v2), а майнинг запустить на ПК или Raspberry Pi с подключённым внешним диском. ZTH Tracker — удобное PWA-приложение для мониторинга с телефона.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-inner fade-up">
+      <span class="badge badge-green" style="margin-bottom:20px;"><span class="dot"></span>Готов начать?</span>
+      <h2>Начни майнить SIGNA<br /><span class="g-green">уже сегодня</span></h2>
+      <p>Установи кошелёк, купи немного SIGNA для старта и запусти майнер. Первые монеты могут прийти уже через несколько часов после завершения плотинга.</p>
+      <div class="cta-btns">
+        <a href="https://chrome.google.com/webstore/detail/signum-xt-wallet/mdnleldcmiljblolnjhpnblkcekpdkpa" target="_blank" class="btn btn-primary">Установить кошелёк</a>
+        <a href="#start" class="btn btn-ghost">Пошаговое руководство</a>
+        <a href="https://t.me/signum_russian" target="_blank" class="btn btn-ghost">Задать вопрос</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">S</div>
+        Signum RU
+      </div>
+      <div class="footer-links">
+        <a href="https://signum.network" target="_blank">signum.network</a>
+        <a href="https://btdex.trade" target="_blank">BTDEX</a>
+        <a href="https://signumswap.com" target="_blank">SignumSwap</a>
+        <a href="https://xeggex.com" target="_blank">Xeggex</a>
+        <a href="https://t.me/signum_russian" target="_blank">Telegram RU</a>
+        <a href="https://github.com/signum-network" target="_blank">GitHub</a>
+        <a href="https://zth-web-2.vercel.app" target="_blank">ZTH Tracker</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Неофициальный русскоязычный ресурс · Не является финансовой консультацией</span>
+      <span>Блокчейн <a href="https://signum.network" target="_blank">Signum Network</a> · Работает с 2014 (BurstCoin)</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+  }
+
+  function copyAddr(id, btn) {
+    const text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Скопировано';
+      btn.style.color = '#00e676';
+      setTimeout(() => { btn.textContent = 'Копировать'; btn.style.color = ''; }, 2000);
+    });
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
